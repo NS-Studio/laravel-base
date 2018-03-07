@@ -1,9 +1,12 @@
 {
-  "name": "laravel/laravel",
-  "description": "The Laravel Framework.",
+  "name": "ns_studio/laravel-base",
+  "description": "The Laravel Framework With Full Vue Support.",
   "keywords": [
     "framework",
-    "laravel"
+    "laravel",
+    "vue",
+    "vue-bootstrap",
+    "ns_studio"
   ],
   "license": "MIT",
   "type": "project",
