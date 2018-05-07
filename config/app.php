@@ -150,7 +150,6 @@ return [
         /*
          * Package Service Providers...
          */
-        \LasseRafn\Economic\EconomicServiceProvider::class,
 
         /*
          * Application Service Providers...
