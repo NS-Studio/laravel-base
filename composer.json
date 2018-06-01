@@ -1,12 +1,14 @@
 {
   "name": "ns_studio/laravel-base",
-  "description": "The Laravel Framework With Full Vue Support.",
+  "description": "Laravel SPA Application with some advanced features..",
   "keywords": [
     "framework",
     "laravel",
     "vue",
     "vue-bootstrap",
-    "ns_studio"
+    "ns_studio",
+    "SPA",
+    "single page application"
   ],
   "repositories": [
     {
