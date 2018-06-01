@@ -12,8 +12,12 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
-        'App\Events\Event' => [
+        'App\Events\Event'                                             => [
             'App\Listeners\EventListener',
+        ],
+        'Barryvdh\TranslationManager\Events\TranslationsExportedEvent' => [
+
+            'App\Listeners\TranslationsExportedListener',
         ],
     ];
 

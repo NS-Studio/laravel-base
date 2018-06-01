@@ -1,13 +1,47 @@
-window._ = require('lodash');
-
+import Gate from './Gate';
 import Vue from 'vue';
 import BootstrapVue from 'bootstrap-vue';
 import VueResource from 'vue-resource';
-import VeeValidate from 'vee-validate';
+import VueRouter from 'vue-router';
+import Toasted from 'vue-toasted';
+import Icon from 'vue-awesome/components/Icon';
+import 'vue-awesome/icons';
+// Translations
+import Lang from 'lang.js';
+import messages from './messages';
+// Navigation components
+import NavigationComponent from './components/NavigationComponent.vue';
+import Navbar from './components/Navbar';
+// Admin components
+import AdminPanel from './components/Admin/AdminPanel';
+// Example component - @todo remove this in private projects
+import ExampleComponent from './components/ExampleComponent';
 
-Vue.use(VueResource);
-Vue.use(BootstrapVue);
-Vue.use(VeeValidate);
+const default_locale = window.default_language;
+const fallback_locale = window.fallback_locale;
+
+window._ = require( 'lodash' );
+window.changeCase = require( 'change-case' );
+require( 'datejs' );
+
+const routes = [
+
+    // Admin routes
+    { path: '/admin/panel', component: AdminPanel, name: 'admin-panel' },
+    // Example route - @todo remove this in private projects
+    { path: '/example', component: ExampleComponent, name: 'example' },
+];
+
+Vue.use( VueResource );
+Vue.use( BootstrapVue );
+Vue.use( VueRouter );
+Vue.component( 'icon', Icon );
+Vue.use( Toasted );
+
+Vue.prototype.$eventHub = new Vue(); // Global event bus
+Vue.prototype.$gate = new Gate( window.user );
+VueRouter.prototype.$gate = new Gate( window.user );
+Vue.prototype.trans = new Lang( { messages, locale: default_locale, fallback: fallback_locale } );
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -15,17 +49,62 @@ Vue.use(VeeValidate);
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-let token = document.head.querySelector('meta[name="csrf-token"]');
+let token = document.head.querySelector( 'meta[name="csrf-token"]' ).content;
 
-const app = new Vue({
-    el: '#app',
-    http: {
+Vue.http.headers.common[ 'X-CSRF-TOKEN' ] = token;
+Vue.http.headers.common[ 'Accept' ] = 'application/json';
 
-        headers: {
+const router = new VueRouter( {
+    routes // short for `routes: routes`
+} );
 
-            'X-Requested-With': 'XMLHttpRequest',
-            'X-CSRF-TOKEN': token
+Vue.http.interceptors.push( function ( request ) {
+
+    let self = this;
+
+    // return response callback
+    return function ( response ) {
+
+        if ( response.status === 401 ) {
+
+            self.$toasted.show( 'You have been logged out due to inactivity, will be now redirected to login.', {
+
+                type:     'danger',
+                duration: 2000,
+            } );
+
+            window.setTimeout( function () {
+
+                window.location.replace( '/' );
+            }, 3000 );
+
         }
+
+    };
+} );
+router.beforeEach( ( to, from, next ) => {
+
+    //console.log( to );
+    let self = router;
+
+    if ( to.path !== '/' && to.name !== null && self.$gate.can( window.changeCase.snakeCase( to.name ), 'router', to ) ) {
+
+        next();
+
+    } else {
+
+        return false;
     }
 
-});
+} );
+
+const app = new Vue( {
+    el:         '#app',
+    components: {
+
+        'navigation-component': NavigationComponent,
+        'navbar':               Navbar,
+    },
+    router,
+
+} );

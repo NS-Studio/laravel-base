@@ -15,7 +15,23 @@ Auth::routes();
 
 Route::get( '/', function () {
 
-    return redirect()->route( 'home' );
+    return view( 'layouts.dashboard' );
+} )->name( 'home' )->middleware( [ 'web', 'auth:web' ] );
+
+Route::get( '403', function () {
+
+    abort( 403, 'You are not allowed to use this action.' );
 } );
 
-Route::get( '/home', 'HomeController@index' )->name( 'home' );
+Route::group( [ 'prefix' => 'admin', 'middleware' => [ 'auth', 'admin' ], 'namespace' => 'Admin' ], function () {
+
+    Route::get( 'panel', 'AdminController@panel' )->name( 'admin.panel' );
+
+    Route::get( 'users', 'AdminController@listUsers' )->name( 'admin.users.list' );
+
+    Route::post( 'users', 'AdminController@store' )->name( 'admin.users.store' );
+
+    Route::put( 'users/{user}', 'AdminController@update' )->name( 'admin.users.update' );
+
+    Route::delete( 'users/{user}', 'AdminController@delete' )->name( 'admin.users.delete' );
+} );

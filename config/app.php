@@ -1,5 +1,8 @@
 <?php
 
+use App\Providers\ComposerServiceProvider;
+use GoogleMaps\ServiceProvider\GoogleMapsServiceProvider;
+
 return [
 
     /*
@@ -150,6 +153,7 @@ return [
         /*
          * Package Service Providers...
          */
+        GoogleMapsServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -159,6 +163,9 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+
+        // Custom Service Providers
+        ComposerServiceProvider::class,
 
     ],
 

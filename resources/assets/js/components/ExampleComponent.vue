@@ -1,23 +1,29 @@
 <template>
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <div class="card card-default">
-                    <div class="card-header">Example Component</div>
+  <b-row>
 
-                    <div class="card-body">
-                        I'm an example component.
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    <b-col>
+
+      <b-card title="Example Card Component"
+              img-src="https://picsum.photos/5000/3000/?image=41&blur"
+              img-alt="Image"
+              img-top
+              style="width: 100%;"
+              class="mb-2">
+        <p class="card-text">
+          This is just an example component to give you an intro how you'll components will be rendered.
+        </p>
+        <b-button href="/"
+                  variant="primary">Go Home
+        </b-button>
+      </b-card>
+    </b-col>
+
+  </b-row>
 </template>
 
 <script>
     export default {
-        mounted() {
-            console.log('Component mounted.')
-        }
+
+        name: 'example-component',
     }
 </script>
