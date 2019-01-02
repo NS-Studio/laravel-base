@@ -8,12 +8,13 @@ import Icon from 'vue-awesome/components/Icon';
 import 'vue-awesome/icons';
 // Translations
 import Lang from 'lang.js';
-import messages from './messages';
+import messages from './ll_messages';
 // Navigation components
 import NavigationComponent from './components/NavigationComponent.vue';
 import Navbar from './components/Navbar';
 // Admin components
-import AdminPanel from './components/Admin/AdminPanel';
+import AdminNavigation from './components/Admin/AdminNavigationComponent';
+import AdminUsers from './components/Admin/Cards/AdminUsers';
 // Example component - @todo remove this in private projects
 import ExampleComponent from './components/ExampleComponent';
 
@@ -27,7 +28,7 @@ require( 'datejs' );
 const routes = [
 
     // Admin routes
-    { path: '/admin/panel', component: AdminPanel, name: 'admin-panel' },
+    { path: '/admin/users', component: AdminUsers, name: 'admin-users-table' },
     // Example route - @todo remove this in private projects
     { path: '/example', component: ExampleComponent, name: 'example' },
 ];
@@ -102,6 +103,7 @@ const app = new Vue( {
     el:         '#app',
     components: {
 
+        'admin-navigation':     AdminNavigation,
         'navigation-component': NavigationComponent,
         'navbar':               Navbar,
     },

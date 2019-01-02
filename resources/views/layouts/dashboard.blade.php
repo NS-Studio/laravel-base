@@ -49,7 +49,11 @@
       <b-col cols="3">
 
         <div id="navigation-vue">
+          @if($user->isAdmin())
+            <admin-navigation></admin-navigation>
+          @else
           <navigation-component></navigation-component>
+          @endif
         </div>
       </b-col>
     @endif

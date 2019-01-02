@@ -7,6 +7,53 @@
 @import '~bootstrap-vue/dist/bootstrap-vue';
 
 .navbar-laravel {
-  background-color: #fff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+  background-color : #ffffff;
+  box-shadow       : 0 2px 4px rgba(0, 0, 0, 0.04);
+}
+
+.details-header {
+
+  font-size : 1.5rem;
+  color     : $purple-color;
+}
+
+.color-purple {
+
+  color : $purple-color;
+}
+
+.color-dark-purple {
+
+  color : $dark-purple;
+}
+
+.side-nav-link.router-link-active {
+
+  color : $primary;
+}
+
+#subscriptionCollapse, #apiCollapse, #adminCollapse, #pomodoroCollapse {
+
+  li {
+
+    cursor : pointer;
+
+    &:hover {
+
+      color            : $primary;
+      background-color : rgba(112, 97, 255, .04);
+    }
+  }
+}
+
+.collapse-toggle-button {
+
+  a {
+
+    color : inherit;
+  }
+  &:hover {
+
+    color : rgba(50, 48, 104, .65);
+  }
 }

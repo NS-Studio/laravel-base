@@ -10,4 +10,11 @@ return [
     'contracts'       => 'Contracts',
     'integrations'    => 'Integrations',
     'map'             => 'Map',
+    'admin'           => [
+
+        'users' => [
+
+            'table' => 'Users',
+        ],
+    ],
 ];

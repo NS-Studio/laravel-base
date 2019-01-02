@@ -1,98 +1,46 @@
 <template>
   <div>
-    <b-form @submit.prevent="search()"
-            class="mb-2">
 
-      <b-input-group class="mb-2">
+    <b-nav vertical>
 
-        <b-input v-model="query"
-                 type="text"
-                 :placeholder="trans.get('search.placeholder')"></b-input>
+      <b-nav-item v-b-toggle.pomodoroCollapse
+                  class="color-inherit collapse-toggle-button">{{ trans.get('__JSON__.Pomodoro') }}
+        <span class="float-right">
+        <icon :name="pomodoroCaret"
+              scale="0.8"></icon></span>
+      </b-nav-item>
 
-        <b-input-group-text slot="append"
-                            style="cursor: pointer;">
-          <strong @click.prevent="onClear">X</strong>
-        </b-input-group-text>
-      </b-input-group>
+      <b-collapse id="pomodoroCollapse"
+                  visible
+                  @show="pomodoroCaret = 'caret-up'"
+                  @hide="pomodoroCaret = 'caret-down'"
+                  class="ml-4">
 
-      <b-card v-if="searching.results > 0"
-              flush
-              header="Customers"
-              no-body>
-
-        <b-list-group>
-
-          <b-list-group-item v-for="result in searching.results"
-                             :key="result.id"
-                             to="#">
-            {{ result.name }}
-          </b-list-group-item>
-        </b-list-group>
-      </b-card>
-
-    </b-form>
-
-    <b-list-group>
-
-      <b-card>
-
-        <router-link :to="{ name: 'example' }"
-                     size="sm">{{ trans.get('navigation.example')}}
+        <router-link
+                tag="li"
+                class="side-nav-link clearfix"
+                :to="{ name: 'example' }"
+                size="sm">
+          <icon name="hourglass"
+                class="mr-2"></icon>
+          {{ trans.get('navigation.example')}}
         </router-link>
-      </b-card>
 
-    </b-list-group>
+      </b-collapse>
+    </b-nav>
   </div>
 </template>
 
 <script>
     export default {
-        name:    'navigation-component',
+        name: 'navigation-component',
         data() {
 
             return {
 
-                query:     '',
-                searching: {
-
-                    url:     window.Laravel.urls.ajax.search,
-                    results: [],
-                }
+                pomodoroCaret: 'caret-up',
             };
         },
-        methods: {
-
-            search() {
-
-                let self = this;
-                this.$http.get( this.searching.url, {
-
-                    params: {
-
-                        query: this.query,
-                    },
-                } ).then( response => {
-
-                    this.searching.results = response.data.results;
-                }, response => {
-
-                    _.each( response.data.errors, function ( error ) {
-
-                        self.$toasted.show( error, {
-
-                            type:     'danger',
-                            duration: 3000,
-                        } );
-                    } );
-                } );
-            },
-            onClear() {
-
-                this.searching.results.customers = [];
-                this.searching.results.customer_contacts = [];
-                this.query = '';
-            }
-        }
     };
 </script>
 

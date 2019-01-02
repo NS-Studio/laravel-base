@@ -11,9 +11,6 @@
                 id="nav_collapse">
 
       <b-navbar-nav>
-        <b-nav-item v-if="this.$gate.can('access', 'admin_policy', user)"
-                    @click.prevent="accessAdminPanel">{{ trans.get('admin.panel')}}
-        </b-nav-item>
 
         <b-nav-item v-if="this.$gate.can('access', 'admin_policy', user)"
                     href="/log-viewer">{{ trans.get('admin.log_viewer')}}
@@ -53,7 +50,6 @@
                 logout:      window.Laravel.urls.logout,
                 user:        window.user,
                 app_name:    window.app_name,
-                admin_panel: window.Laravel.urls.admin.panel,
             };
         },
         methods: {
@@ -68,10 +64,6 @@
                     window.location.replace( '/' );
                 } );
             },
-            accessAdminPanel() {
-
-                window.location.replace( this.admin_panel );
-            }
         }
     };
 </script>
