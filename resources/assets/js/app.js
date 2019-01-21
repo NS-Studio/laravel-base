@@ -1,3 +1,4 @@
+/*
 import Gate from './Gate';
 import Vue from 'vue';
 import BootstrapVue from 'bootstrap-vue';
@@ -18,86 +19,168 @@ import AdminUsers from './components/Admin/Cards/AdminUsers';
 // Example component - @todo remove this in private projects
 import ExampleComponent from './components/ExampleComponent';
 
-const default_locale = window.default_language;
+ const default_locale = window.default_language;
 const fallback_locale = window.fallback_locale;
 
-window._ = require( 'lodash' );
+ window._ = require( 'lodash' );
 window.changeCase = require( 'change-case' );
 require( 'datejs' );
 
-const routes = [
+ const routes = [
 
-    // Admin routes
-    { path: '/admin/users', component: AdminUsers, name: 'admin-users-table' },
-    // Example route - @todo remove this in private projects
-    { path: '/example', component: ExampleComponent, name: 'example' },
+ // Admin routes
+ { path: '/admin/users', component: AdminUsers, name: 'admin-users-table' },
+ // Example route - @todo remove this in private projects
+ { path: '/example', component: ExampleComponent, name: 'example' },
 ];
 
-Vue.use( VueResource );
+ Vue.use( VueResource );
 Vue.use( BootstrapVue );
 Vue.use( VueRouter );
 Vue.component( 'icon', Icon );
 Vue.use( Toasted );
 
-Vue.prototype.$eventHub = new Vue(); // Global event bus
+ Vue.prototype.$eventHub = new Vue(); // Global event bus
 Vue.prototype.$gate = new Gate( window.user );
 VueRouter.prototype.$gate = new Gate( window.user );
 Vue.prototype.trans = new Lang( { messages, locale: default_locale, fallback: fallback_locale } );
+
+ /!**
+ * Next, we will create a fresh Vue application instance and attach it to
+ * the page. Then, you may begin adding components to this application
+ * or customize the JavaScript scaffolding to fit your unique needs.
+ *!/
+
+ let token = document.head.querySelector( 'meta[name="csrf-token"]' ).content;
+
+ Vue.http.headers.common[ 'X-CSRF-TOKEN' ] = token;
+Vue.http.headers.common[ 'Accept' ] = 'application/json';
+
+ const router = new VueRouter( {
+ routes // short for `routes: routes`
+} );
+
+ Vue.http.interceptors.push( function ( request ) {
+
+ let self = this;
+
+ // return response callback
+ return function ( response ) {
+
+ if ( response.status === 401 ) {
+
+ self.$toasted.show( 'You have been logged out due to inactivity, will be now redirected to login.', {
+
+ type:     'danger',
+ duration: 2000,
+ } );
+
+ window.setTimeout( function () {
+
+ window.location.replace( '/' );
+ }, 3000 );
+
+ }
+
+ };
+} );
+router.beforeEach( ( to, from, next ) => {
+
+ //console.log( to );
+ let self = router;
+
+ if ( to.path !== '/' && to.name !== null && self.$gate.can( window.changeCase.snakeCase( to.name ), 'router', to ) ) {
+
+ next();
+
+ } else {
+
+ return false;
+ }
+
+ } );
+
+ const app = new Vue( {
+ el:         '#app',
+ components: {
+
+ 'admin-navigation':     AdminNavigation,
+ 'navigation-component': NavigationComponent,
+ 'navbar':               Navbar,
+ },
+ router,
+
+ } );
+ */
+
+import Gate from './Gate';
+import Vue from 'vue';
+import VueResource from 'vue-resource';
+import BootstrapVue from 'bootstrap-vue';
+import VueRouter from 'vue-router';
+import Toasted from 'vue-toasted';
+import Icon from 'vue-awesome/components/Icon';
+import 'vue-awesome/icons';
+import vSelectPage from 'v-selectpage';
+import numeral from './currency';
+import VueEcho from 'vue-echo-laravel';
+import Loading from 'vue-loading-overlay';
+import 'vue-loading-overlay/dist/vue-loading.css';
+// Translations
+import Lang from 'lang.js';
+import messages from './ll_messages';
+// Navigation components
+import AdminNavigation from './components/Admin/AdminNavigationComponent';
+import NavigationComponent from './components/NavigationComponent.vue';
+import Navbar from './components/Navbar';
+import router from './router';
+import pageTitle from './mixins/pageTitle';
+
+
+const default_locale = window.default_language;
+const fallback_locale = window.fallback_locale;
+
+window._ = require( 'lodash' );
+require( 'datejs' );
+
+Vue.use( VueResource );
+require( './http' );
+
+Vue.use( BootstrapVue );
+Vue.use( VueRouter );
+Vue.component( 'icon', Icon );
+Vue.use( Toasted );
+Vue.use( vSelectPage );
+
+window.Pusher = require( 'pusher-js' );
+Vue.use( VueEcho, {
+
+    broadcaster:  'pusher',
+    key:          process.env.MIX_PUSHER_APP_KEY,
+    cluster:      process.env.MIX_PUSHER_APP_CLUSTER,
+    encrypted:    true,
+    authEndpoint: '/broadcasting/auth',
+    auth:         {
+        headers: {
+            Authorization: null
+        }
+    },
+} );
+Vue.mixin( pageTitle );
+Vue.use( Loading );
+
+Vue.prototype.$currency = numeral;
+
+Vue.prototype.$eventHub = new Vue(); // Global event bus
+Vue.prototype.$gate = new Gate( window.user );
+Vue.prototype.trans = new Lang( { messages, locale: default_locale, fallback: fallback_locale } );
+
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
-
-let token = document.head.querySelector( 'meta[name="csrf-token"]' ).content;
-
-Vue.http.headers.common[ 'X-CSRF-TOKEN' ] = token;
-Vue.http.headers.common[ 'Accept' ] = 'application/json';
-
-const router = new VueRouter( {
-    routes // short for `routes: routes`
-} );
-
-Vue.http.interceptors.push( function ( request ) {
-
-    let self = this;
-
-    // return response callback
-    return function ( response ) {
-
-        if ( response.status === 401 ) {
-
-            self.$toasted.show( 'You have been logged out due to inactivity, will be now redirected to login.', {
-
-                type:     'danger',
-                duration: 2000,
-            } );
-
-            window.setTimeout( function () {
-
-                window.location.replace( '/' );
-            }, 3000 );
-
-        }
-
-    };
-} );
-router.beforeEach( ( to, from, next ) => {
-
-    //console.log( to );
-    let self = router;
-
-    if ( to.path !== '/' && to.name !== null && self.$gate.can( window.changeCase.snakeCase( to.name ), 'router', to ) ) {
-
-        next();
-
-    } else {
-
-        return false;
-    }
-
-} );
 
 const app = new Vue( {
     el:         '#app',
@@ -108,5 +191,20 @@ const app = new Vue( {
         'navbar':               Navbar,
     },
     router,
+    mounted() {
+        /*
+         Example of creating new listener for broadcasting events
+
+         this.$echo.private( 'orders' ).listen( 'OrderResentEvent', ( response ) => {
+
+         this.$eventHub.$emit( 'order-resend-done' );
+         this.$toasted.show( response.message, {
+
+         duration: 5000,
+         type:     response.type,
+         } );
+         } );*/
+    }
 
 } );
+

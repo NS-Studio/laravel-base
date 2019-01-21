@@ -35,6 +35,7 @@ class UserRequest extends FormRequest
             ],
             'password' => 'nullable|sometimes|string|min:6',
             'role'     => 'required|string|in:user,admin',
+            'locale'   => 'required|string|in:en,de',
         ];
     }
 }

@@ -4,41 +4,41 @@
     <b-modal id="newUserModal"
              hide-footer
              ref="newUserModal"
-             title="Create new User">
+             :title="trans.get('__JSON__.Create new User')">
 
       <b-form @submit.prevent="onSubmit">
 
-        <b-form-group label="Name:">
+        <b-form-group :label="trans.get('__JSON__.Name')">
 
           <b-form-input type="text"
                         v-model="form.name"
                         required
-                        placeholder="Enter user name">
+                        :placeholder="trans.get('__JSON__.Enter user name')">
           </b-form-input>
 
         </b-form-group>
 
-        <b-form-group label="Email:">
+        <b-form-group :label="trans.get('__JSON__.Email')">
 
           <b-form-input type="email"
                         v-model="form.email"
                         required
-                        placeholder="Enter email address">
+                        :placeholder="trans.get('__JSON__.Enter email address')">
           </b-form-input>
 
         </b-form-group>
 
-        <b-form-group label="Password:">
+        <b-form-group :label="trans.get('__JSON__.Password')">
 
           <b-form-input type="password"
                         v-model="form.password"
                         required
-                        placeholder="Enter user's password">
+                        :placeholder="trans.get('__JSON__.Enter user password')">
           </b-form-input>
 
         </b-form-group>
 
-        <b-form-group label="Role:">
+        <b-form-group :label="trans.get('__JSON__.Role')">
 
           <b-form-select v-model="form.role"
                          :options="roles"
@@ -48,9 +48,19 @@
 
         </b-form-group>
 
+        <b-form-group :label="trans.get('__JSON__.Locale')">
+
+          <b-form-select v-model="form.locale"
+                         :options="locales"
+                         :text-field="'label'"
+                         :value-field="'value'"
+          />
+
+        </b-form-group>
+
         <b-button type="submit"
 
-                  variant="primary">Submit
+                  variant="primary">{{ trans.get('__JSON__.Submit') }}
         </b-button>
 
       </b-form>
@@ -68,12 +78,17 @@
 
         props:   {
 
-            url:   {
+            url:     {
 
                 default: '',
                 type:    String,
             },
-            roles: {
+            roles:   {
+
+                default: [],
+                type:    Array,
+            },
+            locales: {
 
                 default: [],
                 type:    Array,
@@ -89,6 +104,7 @@
                     email:    null,
                     role:     'user',
                     password: null,
+                    locale:   'en',
                 },
             };
         },
@@ -105,9 +121,11 @@
                     self.$refs.newUserModal.hide();
                     self.form = {
 
-                        name:  null,
-                        email: null,
-                        role:  'user',
+                        name:     null,
+                        email:    null,
+                        role:     'user',
+                        password: null,
+                        locale:   'en',
                     };
 
                 }, response => {

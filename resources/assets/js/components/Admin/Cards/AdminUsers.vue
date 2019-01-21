@@ -14,20 +14,20 @@
 
 
         <b-btn variant="primary"
-               @click.prevent="onEdit(data.item, data.index)">Edit
+               @click.prevent="onEdit(data.item, data.index)">{{ trans.get('__JSON__.Edit') }}
         </b-btn>
 
         <b-btn @click.prevent="onDelete(data.item, data.index)"
-               variant="danger">Delete
+               variant="danger">{{ trans.get('__JSON__.Delete') }}
         </b-btn>
 
       </template>
 
       <template slot="table-caption">
-        All users - {{ users.length }}
+        {{ trans.get('__JSON__.All users') }} - {{ users.length }}
         <b-btn class="float-right text-white"
                v-b-modal.newUserModal
-               variant="warning">New user
+               variant="warning">{{ trans.get('__JSON__.New user') }}
         </b-btn>
       </template>
 
@@ -39,11 +39,13 @@
                   v-model="currentPage" />
 
     <new-user-modal :url="urls.users.store"
+                    :locales="locales"
                     :roles="roles"></new-user-modal>
 
     <edit-user-modal :url="urls.users.update"
                      :roles="roles"
-                     :user="edit.user"
+                     :editUser="edit.user"
+                     :locales="locales"
                      :index="edit.index"></edit-user-modal>
 
   </div>
@@ -59,16 +61,22 @@
             NewUserModal
         },
         name:       'admin-users',
+        title() {
+
+            return this.trans.get( '__JSON__.Users' );
+        },
         data() {
 
             return {
 
                 fields:      [
 
-                    { key: 'name', label: 'Name', sortable: true },
-                    { key: 'email', label: 'Email', sortable: true },
-                    { key: 'role', label: 'Role', sortable: true },
-                    { key: 'actions', label: 'Actions' },
+                    { key: 'id', label: '#', sortable: true },
+                    { key: 'name', label: this.trans.get( '__JSON__.Name' ), sortable: true },
+                    { key: 'email', label: this.trans.get( '__JSON__.Email' ), sortable: true },
+                    { key: 'role', label: this.trans.get( '__JSON__.Role' ), sortable: true },
+                    { key: 'locale', label: this.trans.get( '__JSON__.Locale' ), sortable: true },
+                    { key: 'actions', label: this.trans.get( '__JSON__.Actions' ) },
                 ],
                 users:       [],
                 urls:        {
@@ -79,7 +87,7 @@
                         store:  window.Laravel.urls.ajax.admin.users.store,
                         update: window.Laravel.urls.ajax.admin.users.update,
                         delete: window.Laravel.urls.ajax.admin.users.delete,
-                    }
+                    },
                 },
                 currentPage: 1,
                 perPage:     100,
@@ -93,6 +101,18 @@
                     { name: 'User', value: 'user' },
                     { name: 'Admin', value: 'admin' },
                 ],
+                locales:     [
+
+                    {
+                        value: 'en',
+                        label: 'English',
+                    },
+                    {
+                        value: 'de',
+                        label: 'Danish'
+                    }
+                ],
+                pageTitle:   this.trans.get( '__JSON__.Users' ),
             };
         },
         methods:    {
@@ -108,6 +128,8 @@
             },
             onEdit( user, index ) {
 
+                this.edit.index = null;
+                this.edit.user = {};
                 this.edit.index = index;
                 this.edit.user = user;
 
@@ -122,17 +144,21 @@
 
                     self.users.splice( index, 1 );
                 } );
-            }
+            },
         },
         mounted() {
 
             let self = this;
 
-            self.getUsers();
+            this.getUsers();
 
             self.$on( 'user-created', function ( user ) {
 
                 self.users.push( user );
+            } );
+            self.$on( 'user-edited', function ( user, index ) {
+
+                self.users.splice( index, 1, user );
             } );
         }
     };

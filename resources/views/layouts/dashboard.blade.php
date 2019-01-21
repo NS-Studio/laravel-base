@@ -77,16 +77,20 @@
 
             ajax:   {
                 search: "{{ route('ajax.search') }}",
-                admin:  {
+              @if($user->isAdmin())
+              admin:    {
 
-                    users: {
+                  users: {
 
-                        list:   "{{ route('admin.users.list') }}",
-                        store:  "{{ route('admin.users.store') }}",
-                        update: "{{ route('admin.users.update', 0) }}",
-                        delete: "{{ route('admin.users.delete', 0) }}",
-                    },
-                }
+                      list:   "{{ route('admin.users.list') }}",
+                      store:  "{{ route('admin.users.store') }}",
+                      update: "{{ route('admin.users.update', 0) }}",
+                      delete: "{{ route('admin.users.delete', 0) }}",
+                  },
+              },
+              @elseif($user->isUser())
+              users:    {},
+              @endif
             },
             logout: "{{ route('logout') }}",
             admin:  {
@@ -96,7 +100,7 @@
         }
     };
     window.app_name = "{{ config('app.name') }}";
-    window.default_locale = "{{ config('app.lang') }}";
+    window.default_locale = "{{ config('app.locale') }}";
     window.fallback_locale = "{{ config('app.fallback_locale') }}";
 
     @auth

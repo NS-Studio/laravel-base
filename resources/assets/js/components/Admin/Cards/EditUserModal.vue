@@ -4,31 +4,32 @@
            hide-footer
            lazy
            ref="editUserModal"
-           title="Edit User">
+           @hidden="onHidden"
+           :title="trans.get('__JSON__.Edit User')">
 
     <b-form @submit.prevent="onSubmit">
 
-      <b-form-group label="Name:">
+      <b-form-group :label="trans.get('__JSON__.Name')">
 
         <b-form-input type="text"
                       v-model="user.name"
                       required
-                      placeholder="Enter user name">
+                      :placeholder="trans.get('__JSON__.Enter user name')">
         </b-form-input>
 
       </b-form-group>
 
-      <b-form-group label="Email:">
+      <b-form-group :label="trans.get('__JSON__.Email')">
 
         <b-form-input type="email"
                       v-model="user.email"
                       required
-                      placeholder="Enter email address">
+                      :placeholder="trans.get('__JSON__.Enter email address')">
         </b-form-input>
 
       </b-form-group>
 
-      <b-form-group label="Role:">
+      <b-form-group :label="trans.get('__JSON__.Role')">
 
         <b-form-select v-model="user.role"
                        :options="roles"
@@ -38,9 +39,19 @@
 
       </b-form-group>
 
+      <b-form-group :label="trans.get('__JSON__.Locale')">
+
+        <b-form-select v-model="user.locale"
+                       :options="locales"
+                       :text-field="'label'"
+                       :value-field="'value'"
+        />
+
+      </b-form-group>
+
       <b-button type="submit"
 
-                variant="primary">Submit
+                variant="primary">{{ trans.get('__JSON__.Submit') }}
       </b-button>
 
     </b-form>
@@ -52,26 +63,38 @@
         name:    'edit-user-modal',
         props:   {
 
-            url:   {
+            url:      {
 
                 default: '',
                 type:    String,
             },
-            roles: {
+            roles:    {
 
                 default: [],
                 type:    Array,
             },
-            user:  {
+            editUser: {
 
                 default: {},
                 type:    Object,
             },
-            index: {
+            index:    {
 
                 default: null,
                 type:    Number,
-            }
+            },
+            locales:  {
+
+                default: [],
+                type:    Array,
+            },
+        },
+        data() {
+
+            return {
+
+                user: {},
+            };
         },
         methods: {
 
@@ -101,7 +124,18 @@
 
                 } );
             },
+            onHidden() {
+
+                this.editUser = {};
+            }
         },
+        watch:   {
+
+            'editUser': function () {
+
+                this.user = Object.assign( {}, this.editUser );
+            }
+        }
     };
 </script>
 

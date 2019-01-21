@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\User;
 use Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use Laravel\Passport\Passport;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -25,6 +26,8 @@ class AuthServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->registerPolicies();
+
+        Passport::routes();
 
         // Only admin and company users are allowed to access full dashboard
         Gate::define( 'access-dashboard', function ( User $user ) {
