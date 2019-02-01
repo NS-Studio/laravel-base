@@ -8,13 +8,11 @@
 
 namespace App\Providers;
 
-
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
 class ComposerServiceProvider extends ServiceProvider
 {
-
     /**
      * Register bindings in the container.
      *
@@ -24,10 +22,10 @@ class ComposerServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        View::composer( 'layouts.dashboard', function ( $view ) {
+        View::composer('layouts.dashboard', function ($view) {
 
-            return $view->with( [ 'user' => auth()->user() ] );
-        } );
+            return $view->with(['user' => auth()->user()->LoadRoles()]);
+        });
     }
 
     /**

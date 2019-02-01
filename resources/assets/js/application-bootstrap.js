@@ -33,6 +33,7 @@ window.dayjs.extend( relativeTime );
 window.dayjs.locale( default_locale );
 
 VTooltip.enabled = window.innerWidth > 768;
+window.isMobile = window.innerWidth < 768;
 
 Vue.use( VTooltip, {
     autoHide:              false,

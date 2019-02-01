@@ -13,10 +13,10 @@ class TableUsersLocale extends Migration
      */
     public function up()
     {
-        Schema::table( 'users', function ( Blueprint $table ) {
+        Schema::table('users', function (Blueprint $table) {
 
-            $table->string( 'locale' )->default( 'en' );
-        } );
+            $table->string('locale')->default('sr');
+        });
     }
 
     /**
@@ -26,9 +26,9 @@ class TableUsersLocale extends Migration
      */
     public function down()
     {
-        Schema::table( 'users', function ( Blueprint $table ) {
+        Schema::table('users', function (Blueprint $table) {
 
-            $table->dropColumn( 'locale' );
-        } );
+            $table->dropColumn('locale');
+        });
     }
 }

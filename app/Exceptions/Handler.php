@@ -12,8 +12,7 @@ class Handler extends ExceptionHandler
      *
      * @var array
      */
-    protected $dontReport = [
-        //
+    protected $dontReport = [//
     ];
 
     /**
@@ -35,13 +34,13 @@ class Handler extends ExceptionHandler
      *
      * @return void
      */
-    public function report( Exception $e )
+    public function report(Exception $e)
     {
-        if ( $this->shouldReport( $e ) ) {
+        if ($this->shouldReport($e)) {
 
             //Check to see if LERN is installed otherwise you will not get an exception.
-            if ( app()->bound( "lern" ) ) {
-                app()->make( "lern" )->handle( $e ); //Record and Notify the Exception
+            if (app()->bound("lern") && app()->environment() === 'production') {
+                app()->make("lern")->handle($e); //Record and Notify the Exception
 
                 /*
                 OR...
@@ -51,19 +50,19 @@ class Handler extends ExceptionHandler
             }
         }
 
-        return parent::report( $e );
+        return parent::report($e);
     }
 
     /**
      * Render an exception into an HTTP response.
      *
      * @param  \Illuminate\Http\Request $request
-     * @param  \Exception               $exception
+     * @param  \Exception $exception
      *
      * @return \Illuminate\Http\Response
      */
-    public function render( $request, Exception $exception )
+    public function render($request, Exception $exception)
     {
-        return parent::render( $request, $exception );
+        return parent::render($request, $exception);
     }
 }

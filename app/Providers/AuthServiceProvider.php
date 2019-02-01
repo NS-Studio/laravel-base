@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Policies\UserPolicy;
 use App\User;
 use Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
@@ -15,7 +16,7 @@ class AuthServiceProvider extends ServiceProvider
      * @var array
      */
     protected $policies = [
-        'App\Model' => 'App\Policies\ModelPolicy',
+        User::class => UserPolicy::class,
     ];
 
     /**
@@ -30,17 +31,15 @@ class AuthServiceProvider extends ServiceProvider
         Passport::routes();
 
         // Only admin and company users are allowed to access full dashboard
-        Gate::define( 'access-dashboard', function ( User $user ) {
+        Gate::define('access-dashboard', function (User $user) {
 
-            return $user->isAdmin() || $user->isUser();
-
-        } );
+            return $user->hasAnyRole('admin', 'user', 'developer');
+        });
 
         // Only admin users can access admin panel of course
-        Gate::define( 'access-admin', function ( User $user ) {
+        Gate::define('access-admin', function (User $user) {
 
-            return $user->isAdmin();
-
-        } );
+            return $user->hasAnyRole('admin', 'developer');
+        });
     }
 }

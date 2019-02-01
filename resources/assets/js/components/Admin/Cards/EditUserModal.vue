@@ -1,92 +1,86 @@
 <template>
 
-  <b-modal id="editUserModal"
-           hide-footer
-           lazy
-           ref="editUserModal"
-           @hidden="onHidden"
-           :title="trans.get('__JSON__.Edit User')">
+    <b-modal id="editUserModal"
+             hide-footer
+             lazy
+             :modal-class="'mt-5'"
+             ref="editUserModal"
+             @hidden="onHidden"
+             :title="trans('__JSON__.Edit User')">
 
-    <b-form @submit.prevent="onSubmit">
+        <b-form @submit.prevent="onSubmit">
 
-      <b-form-group :label="trans.get('__JSON__.Name')">
+            <b-form-group :label="trans('__JSON__.Name')">
 
-        <b-form-input type="text"
-                      v-model="user.name"
-                      required
-                      :placeholder="trans.get('__JSON__.Enter user name')">
-        </b-form-input>
+                <b-form-input type="text"
+                              v-model="user.name"
+                              required
+                              :placeholder="trans('__JSON__.Enter user name')">
+                </b-form-input>
 
-      </b-form-group>
+            </b-form-group>
 
-      <b-form-group :label="trans.get('__JSON__.Email')">
+            <b-form-group :label="trans('__JSON__.Email')">
 
-        <b-form-input type="email"
-                      v-model="user.email"
-                      required
-                      :placeholder="trans.get('__JSON__.Enter email address')">
-        </b-form-input>
+                <b-form-input type="email"
+                              v-model="user.email"
+                              required
+                              :placeholder="trans('__JSON__.Enter email address')">
+                </b-form-input>
 
-      </b-form-group>
+            </b-form-group>
 
-      <b-form-group :label="trans.get('__JSON__.Role')">
+            <select-field :label="trans('__JSON__.Role')"
+                          v-model="user.role"
+                          :text-field="'name'"
+                          :value-field="'value'"
+                          :items="roles"></select-field>
 
-        <b-form-select v-model="user.role"
-                       :options="roles"
-                       :text-field="'name'"
-                       :value-field="'value'"
-        />
 
-      </b-form-group>
+            <select-field :label="trans('__JSON__.Locale')"
+                          v-model="user.locale"
+                          :text-field="'label'"
+                          :value-field="'value'"
+                          :items="locales"></select-field>
 
-      <b-form-group :label="trans.get('__JSON__.Locale')">
+            <b-button type="submit"
 
-        <b-form-select v-model="user.locale"
-                       :options="locales"
-                       :text-field="'label'"
-                       :value-field="'value'"
-        />
+                      variant="primary">{{ trans('__JSON__.Submit') }}
+            </b-button>
 
-      </b-form-group>
-
-      <b-button type="submit"
-
-                variant="primary">{{ trans.get('__JSON__.Submit') }}
-      </b-button>
-
-    </b-form>
-  </b-modal>
+        </b-form>
+    </b-modal>
 </template>
 
 <script>
     export default {
-        name:    'edit-user-modal',
-        props:   {
+        name: 'edit-user-modal',
+        props: {
 
-            url:      {
+            url: {
 
                 default: '',
-                type:    String,
+                type: String,
             },
-            roles:    {
+            roles: {
 
                 default: [],
-                type:    Array,
+                type: Array,
             },
             editUser: {
 
                 default: {},
-                type:    Object,
+                type: Object,
             },
-            index:    {
+            index: {
 
                 default: null,
-                type:    Number,
+                type: Number,
             },
-            locales:  {
+            locales: {
 
                 default: [],
-                type:    Array,
+                type: Array,
             },
         },
         data() {
@@ -101,39 +95,39 @@
             onSubmit() {
 
                 let self = this;
-                let url = self.url.replace( 0, self.user.id );
+                let url = self.url.replace(':id', self.user.id);
 
-                self.$http.put( url, self.user ).then( response => {
+                self.$http.put(url, self.user).then(response => {
 
 
-                    self.$parent.$emit( 'user-edited', response.data.user, self.index );
+                    self.$parent.$emit('user-edited', response.data.user, self.index);
                     self.$refs.editUserModal.hide();
 
 
                 }, response => {
 
-                    _.each( response.data.errors, function ( field, index ) {
+                    _.each(response.data.errors, function (field, index) {
 
-                        self.$toasted.show( field[ 0 ], {
+                        self.$toasted.show(field[0], {
 
-                            type:      'error',
+                            type: 'error',
                             fullWidth: true,
-                            duration:  5000,
-                        } );
-                    } );
+                            duration: 5000,
+                        });
+                    });
 
-                } );
+                });
             },
             onHidden() {
 
                 this.editUser = {};
             }
         },
-        watch:   {
+        watch: {
 
             'editUser': function () {
 
-                this.user = Object.assign( {}, this.editUser );
+                this.user = Object.assign({}, this.editUser);
             }
         }
     };

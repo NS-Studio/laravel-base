@@ -14,7 +14,7 @@ class UserRequest extends FormRequest
      */
     public function authorize()
     {
-        return auth()->user()->isAdmin();
+        return auth()->user()->hasRole('admin');
     }
 
     /**
@@ -26,16 +26,15 @@ class UserRequest extends FormRequest
     {
         return [
 
-            'name'     => 'required|string',
-            'email'    => [
+            'name' => 'required|string',
+            'email' => [
 
                 'required',
                 'email',
-                Rule::unique( 'users' )->ignore( $this->id ),
+                Rule::unique('users')->ignore($this->id),
             ],
-            'password' => 'nullable|sometimes|string|min:6',
-            'role'     => 'required|string|in:user,admin',
-            'locale'   => 'required|string|in:en,de',
+            'role' => 'required|string|in:user,admin',
+            'locale' => 'required|string|in:en,de',
         ];
     }
 }

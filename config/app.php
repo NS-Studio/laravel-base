@@ -153,7 +153,6 @@ return [
         /*
          * Package Service Providers...
          */
-        GoogleMapsServiceProvider::class,
 
         /*
          * Application Service Providers...

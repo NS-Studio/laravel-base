@@ -3,42 +3,33 @@
 
     <b-modal id="newUserModal"
              hide-footer
+             :modal-class="'mt-5'"
              ref="newUserModal"
-             :title="trans.get('__JSON__.Create new User')">
+             :title="trans('__JSON__.Create new User')">
 
       <b-form @submit.prevent="onSubmit">
 
-        <b-form-group :label="trans.get('__JSON__.Name')">
+        <b-form-group :label="trans('__JSON__.Name')">
 
           <b-form-input type="text"
                         v-model="form.name"
                         required
-                        :placeholder="trans.get('__JSON__.Enter user name')">
+                        :placeholder="trans('__JSON__.Name')">
           </b-form-input>
 
         </b-form-group>
 
-        <b-form-group :label="trans.get('__JSON__.Email')">
+        <b-form-group :label="trans('__JSON__.Email')">
 
           <b-form-input type="email"
                         v-model="form.email"
                         required
-                        :placeholder="trans.get('__JSON__.Enter email address')">
+                        :placeholder="trans('__JSON__.Email')">
           </b-form-input>
 
         </b-form-group>
 
-        <b-form-group :label="trans.get('__JSON__.Password')">
-
-          <b-form-input type="password"
-                        v-model="form.password"
-                        required
-                        :placeholder="trans.get('__JSON__.Enter user password')">
-          </b-form-input>
-
-        </b-form-group>
-
-        <b-form-group :label="trans.get('__JSON__.Role')">
+        <b-form-group :label="trans('__JSON__.Role')">
 
           <b-form-select v-model="form.role"
                          :options="roles"
@@ -48,7 +39,7 @@
 
         </b-form-group>
 
-        <b-form-group :label="trans.get('__JSON__.Locale')">
+        <b-form-group :label="trans('__JSON__.Locale')">
 
           <b-form-select v-model="form.locale"
                          :options="locales"
@@ -60,7 +51,7 @@
 
         <b-button type="submit"
 
-                  variant="primary">{{ trans.get('__JSON__.Submit') }}
+                  variant="primary">{{ trans('__JSON__.Submit') }}
         </b-button>
 
       </b-form>

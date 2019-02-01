@@ -43,27 +43,26 @@
   <navbar></navbar>
 
   <b-container fluid>
-  <b-row class="mt-2">
-    @if(Gate::allows('access-dashboard', $user ))
-      <b-col cols="3">
+    <b-row>
+      @if(Gate::allows('access-dashboard', $user ))
+        <b-col cols="2"
+               v-if="!isMobile"
+               style="position: fixed; top: 54px; bottom: 0; border-right: 1px solid #e6eaef">
 
-        <div id="navigation-vue">
-          @if($user->isAdmin())
-            <admin-navigation></admin-navigation>
-          @else
-          <navigation-component></navigation-component>
-          @endif
-        </div>
-      </b-col>
-    @endif
+          <div id="navigation-vue">
+            @if($user->hasRole('admin'))
+              <admin-navigation></admin-navigation>
+            @else
+              <navigation-component></navigation-component>
+            @endif
+          </div>
+        </b-col>
+      @endif
 
-    <b-col cols="9">
+      <main-content></main-content>
 
-      <router-view></router-view>
-    </b-col>
-
-  </b-row>
-</b-container>
+    </b-row>
+  </b-container>
 </div>
 
 <!-- Scripts -->
@@ -77,18 +76,18 @@
 
             ajax:   {
                 search: "{{ route('ajax.search') }}",
-              @if($user->isAdmin())
+              @if($user->hasRole('admin'))
               admin:    {
 
                   users: {
 
                       list:   "{{ route('admin.users.list') }}",
                       store:  "{{ route('admin.users.store') }}",
-                      update: "{{ route('admin.users.update', 0) }}",
-                      delete: "{{ route('admin.users.delete', 0) }}",
+                      update: "{{ route('admin.users.update', ':id') }}",
+                      delete: "{{ route('admin.users.delete', ':id') }}",
                   },
               },
-              @elseif($user->isUser())
+              @elseif($user->hasRole('user'))
               users:    {},
               @endif
             },

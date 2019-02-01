@@ -21,7 +21,7 @@ class LoginController extends Controller
 
     use AuthenticatesUsers;
 
-    protected $redirectTo = '/';
+    protected $redirectTo = '/admin/users'; // todo change this to products list later
 
     protected $guard;
 
@@ -47,5 +47,10 @@ class LoginController extends Controller
     {
 
         session( [ 'locale' => $user->locale ] );
+    }
+
+    public function redirectPath()
+    {
+        return '/admin/users';
     }
 }

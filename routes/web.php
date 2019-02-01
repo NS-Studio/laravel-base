@@ -13,25 +13,23 @@
 
 Auth::routes();
 
-Route::get( '/', function () {
+Route::get('/', function () {
 
-    return view( 'layouts.dashboard' );
-} )->name( 'home' )->middleware( [ 'web', 'auth:web' ] );
+    if (auth()->check()) {
 
-Route::get( '403', function () {
+        return redirect()->route('admin.users.list');
+    }
 
-    abort( 403, 'You are not allowed to use this action.' );
-} );
+    return view('layouts.dashboard');
+})->name('home')->middleware(['web', 'auth:web']);
 
-Route::group( [ 'prefix' => 'admin', 'middleware' => [ 'auth', 'admin' ], 'namespace' => 'Admin' ], function () {
+Route::get('/{vue_capture?}', function () {
+    return view('layouts.dashboard');
+})->where('vue_capture', '[\/\w\.-]*');
 
-    Route::get( 'panel', 'AdminController@panel' )->name( 'admin.panel' );
+Route::get('403', function () {
 
-    Route::get( 'users', 'AdminController@listUsers' )->name( 'admin.users.list' );
+    abort(403, 'You are not allowed to use this action.');
+});
 
-    Route::post( 'users', 'AdminController@store' )->name( 'admin.users.store' );
 
-    Route::put( 'users/{user}', 'AdminController@update' )->name( 'admin.users.update' );
-
-    Route::delete( 'users/{user}', 'AdminController@delete' )->name( 'admin.users.delete' );
-} );

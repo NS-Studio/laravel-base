@@ -10,19 +10,18 @@ class AdminMiddleware
      * Handle an incoming request.
      *
      * @param  \Illuminate\Http\Request $request
-     * @param  \Closure                 $next
+     * @param  \Closure $next
      *
      * @return mixed
      */
-    public function handle( $request, Closure $next )
+    public function handle($request, Closure $next)
     {
-        if ( auth()->user() !== null && auth()->user()->isAdmin() ) {
+        if (auth()->user() !== null && auth()->user()->hasAnyRole('admin', 'developer')) {
 
-            return $next( $request );
-
+            return $next($request);
         } else {
 
-            return redirect()->to( '/' );
+            return redirect()->to('/');
         }
     }
 }
