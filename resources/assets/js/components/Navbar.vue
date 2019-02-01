@@ -13,11 +13,11 @@
       <b-navbar-nav>
 
         <b-nav-item v-if="this.$gate.can('access', 'admin_policy', user)"
-                    href="/log-viewer">{{ trans.get('admin.log_viewer')}}
+                    href="/log-viewer">{{ trans('admin.log_viewer')}}
         </b-nav-item>
 
         <b-nav-item v-if="this.$gate.can('access', 'admin_policy', user)"
-                    href="/translations">{{ trans.get('admin.translations')}}
+                    href="/translations">{{ trans('admin.translations')}}
         </b-nav-item>
       </b-navbar-nav>
 
@@ -30,7 +30,7 @@
             <em>{{ user.name }}</em>
           </template>
           <b-dropdown-item href="#"
-                           @click.prevent="onLogout">{{ trans.get('auth.logout') }}
+                           @click.prevent="onLogout">{{ trans('auth.logout') }}
           </b-dropdown-item>
         </b-nav-item-dropdown>
       </b-navbar-nav>

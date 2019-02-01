@@ -18,7 +18,7 @@ export default class Gate {
     }
 
     before() {
-        return this.user.role === 'admin';
+        return this.user.role === 'admin' || this.user.role === 'developer';
     }
 
     can( action, type, model = null ) {
@@ -31,7 +31,7 @@ export default class Gate {
             return this.policies[ type ][ action ]( this.user, model );
         }
 
-        return true;
+        return false;
 
 
     }

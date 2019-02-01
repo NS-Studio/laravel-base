@@ -1,5 +1,3 @@
-import Vue from 'vue';
-
 let token = document.head.querySelector( 'meta[name="csrf-token"]' ).content;
 
 Vue.http.headers.common[ 'X-CSRF-TOKEN' ] = token;

@@ -1,36 +1,85 @@
-let numeral = require( 'numeral' );
-numeral.register( 'locale', 'da', {
-    delimiters:    {
-        thousands: '.',
-        decimal:   ','
-    },
-    abbreviations: {
-        thousand: 'k',
-        million:  'm',
-        billion:  'b',
-        trillion: 't'
-    },
-    ordinal:       function ( number ) {
-        var b = number % 10;
-        return (~~(number % 100 / 10) === 1) ? 'th' :
-            (b === 1) ? 'st' :
-                (b === 2) ? 'nd' :
-                    (b === 3) ? 'rd' : 'th';
-    },
-    currency:      {
-        symbol: '€'
+window.accounting = require( 'accounting' );
+
+window.money = function ( value ) {
+    const max_decimals = 6;
+    let decimals = 2;
+
+    if ( decimals > max_decimals ) {
+        decimals = max_decimals;
     }
-} );
-numeral.locale( 'da' );
 
-export default {
-
-    toCurrency: function ( value ) {
-
-        return numeral( value ).format( '0,0.00' );
-    },
-    toNumber:   function ( value ) {
-
-        return numeral( value ).value();
-    }
+    return accounting.format( value, {
+        symbol:    '',
+        format:    '%v',
+        precision: Number( decimals ),
+        decimal:   ',',
+        thousand:  '.'
+    } );
 };
+
+window.quantity = function ( value ) {
+    const max_decimals = 4;
+    let decimals = 2;
+
+    if ( decimals > max_decimals ) {
+        decimals = max_decimals;
+    }
+
+    return accounting.format( value, {
+        symbol:    '',
+        format:    '%v',
+        precision: Number( decimals ),
+        decimal:   ',',
+        thousand:  '.'
+    } );
+};
+
+window.vat_format = function ( value ) {
+    const max_decimals = 3;
+    let decimals = 2;
+
+    if ( decimals > max_decimals ) {
+        decimals = max_decimals;
+    }
+
+    return accounting.format( value, {
+        symbol:    '',
+        format:    '%v',
+        precision: Number( decimals ),
+        decimal:   ',',
+        thousand:  '.'
+    } );
+};
+
+window.discount_format = function ( value ) {
+    const max_decimals = 2;
+    let decimals = 2;
+
+    if ( decimals > max_decimals ) {
+        decimals = max_decimals;
+    }
+
+    return accounting.format( value, {
+        symbol:    '',
+        format:    '%v',
+        precision: Number( decimals ),
+        decimal:   ',',
+        thousand:  '.'
+    } );
+};
+
+Vue.filter( 'money', function ( value ) {
+    return money( value );
+} );
+
+Vue.filter( 'quantity', function ( value ) {
+    return quantity( value );
+} );
+
+Vue.filter( 'vat_format', function ( value ) {
+    return vat_format( value );
+} );
+
+Vue.filter( 'discount_format', function ( value ) {
+    return discount_format( value );
+} );

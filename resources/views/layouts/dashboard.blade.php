@@ -38,12 +38,11 @@
 <body>
 
 
-<b-container fluid
-             id="app">
+<div id="app">
 
   <navbar></navbar>
 
-
+  <b-container fluid>
   <b-row class="mt-2">
     @if(Gate::allows('access-dashboard', $user ))
       <b-col cols="3">
@@ -65,6 +64,7 @@
 
   </b-row>
 </b-container>
+</div>
 
 <!-- Scripts -->
 <script>

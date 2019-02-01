@@ -4,7 +4,7 @@
     <b-nav vertical>
 
       <b-nav-item v-b-toggle.adminCollapse
-                  class="color-inherit collapse-toggle-button">{{ trans.get('__JSON__.Admin') }}
+                  class="color-inherit collapse-toggle-button">{{ trans('__JSON__.Admin') }}
         <span class="float-right">
         <icon :name="adminCaret"
               scale="0.8"></icon></span>
@@ -24,7 +24,7 @@
                 size="sm">
           <icon name="users"
                 class="mr-2"></icon>
-          {{ trans.get('navigation.admin.users.table')}}
+          {{ trans('navigation.admin.users.table')}}
         </router-link>
 
 
